@@ -1,0 +1,2 @@
+# gentooinstall
+gentoo install info
