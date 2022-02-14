@@ -2,7 +2,7 @@ Using Hetzner ax41-nvme
 
 Specs:
 ```
-AMD Ryzen 5 3600 Hexa-Core*
+AMD Ryzen 5 3600 Hexa-Core
 RAM: 64 GB DDR4
 Disk: 2 x 512 GB NVMe SSD  (software-RAID 1)
 Connection: 1 GBit/s port
