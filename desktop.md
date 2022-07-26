@@ -12,6 +12,8 @@ Gentoo Install on Desktop
 - Read the Gentoo Wiki -> https://wiki.gentoo.org/wiki/Main_Page
 - Read the Arch Wiki for good measure -> https://wiki.archlinux.org/
 
+# Disks
+
 ## Create partitions
 
 fdisk /dev/nvme0n1
@@ -21,78 +23,35 @@ n -> +256G -> T: 1 (efi)
 n -> +8G -> T: swap
 n -> remainder  -> T: linux fx
 
-# Craete file systems
-
-
+## Create file systems
 
 ```
-### confirm
-```
-root@rescue ~ # lsblk
-NAME        MAJ:MIN RM   SIZE RO TYPE MOUNTPOINT
-loop0         7:0    0     3G  1 loop
-nvme0n1     259:0    0 476.9G  0 disk
-├─nvme0n1p1 259:6    0    98M  0 part
-├─nvme0n1p2 259:7    0   512M  0 part
-├─nvme0n1p3 259:8    0    16G  0 part
-└─nvme0n1p4 259:9    0 459.9G  0 part
-nvme1n1     259:4    0 476.9G  0 disk
-├─nvme1n1p1 259:10   0    98M  0 part
-├─nvme1n1p2 259:11   0   512M  0 part
-├─nvme1n1p3 259:12   0    16G  0 part
-└─nvme1n1p4 259:13   0 459.9G  0 part
-```
-## Create raid
-```
-mdadm --create /dev/md0 --level=1 --raid-devices=2 --metadata=0.90 /dev/nvme0n1p1 /dev/nvme1n1p1
-mdadm --create /dev/md1 --level=1 --raid-devices=2 --metadata=0.90 /dev/nvme1n1p2 /dev/nvme0n1p2
-mdadm --create /dev/md2 --level=1 --raid-devices=2 /dev/nvme1n1p4 /dev/nvme0n1p4
+mkfs.vfat -f 32 /dev/nvme0n1p1
+mkswap /dev/nvme1n1p2
+swapon -p 1 /dev/nvme0n1p2
+mkfs.ext4 /dev/nvme0n1p3
 ```
 
-## Make filesystems
+## Confirm
 ```
-mkfs.ext2 /dev/md0
-mkfs.ext4 /dev/md1
-mkswap /dev/nvme0n1p3 && mkswap /dev/nvme1n1p3
-swapon -p 1 /dev/nvme0n1p3 && swapon -p 1 /dev/nvme1n1p3
-mkfs.ext4 /dev/md2
+nvme0n1     259:2    0 931.5G  0 disk
+├─nvme0n1p1 259:3    0   256M  0 part /boot
+├─nvme0n1p2 259:4    0     8G  0 part [SWAP]
+└─nvme0n1p3 259:5    0 923.3G  0 part /
 ```
 
-### Confirm
-```
-root@rescue ~ # lsblk
-NAME        MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINT
-loop0         7:0    0     3G  1 loop
-nvme0n1     259:0    0 476.9G  0 disk
-├─nvme0n1p1 259:6    0    98M  0 part
-│ └─md0       9:0    0  97.9M  0 raid1
-├─nvme0n1p2 259:7    0   512M  0 part
-│ └─md1       9:1    0 511.9M  0 raid1
-├─nvme0n1p3 259:8    0    16G  0 part  [SWAP]
-└─nvme0n1p4 259:9    0 459.9G  0 part
-  └─md2       9:2    0 459.8G  0 raid1
-nvme1n1     259:4    0 476.9G  0 disk
-├─nvme1n1p1 259:10   0    98M  0 part
-│ └─md0       9:0    0  97.9M  0 raid1
-├─nvme1n1p2 259:11   0   512M  0 part
-│ └─md1       9:1    0 511.9M  0 raid1
-├─nvme1n1p3 259:12   0    16G  0 part  [SWAP]
-└─nvme1n1p4 259:13   0 459.9G  0 part
-  └─md2       9:2    0 459.8G  0 raid1
-  ```
-
-  ## Mount Disks
+## Mount Disks
 ```
 mkdir /mnt/gentoo
-mount /dev/md3 /mnt/gentoo/
+mount /dev/nvme0n1p3 /mnt/gentoo/
 mkdir /mnt/gentoo/boot
-mount /dev/md1 /mnt/gentoo/boot/
+mount /dev/nvme0n1p1 /mnt/gentoo/boot/
 cd /mnt/gentoo/
 pacman -Sy ; pacman -S links
 
 
 ```
-
+# System
 ## Get the tar and chroot
 ```
 links https://www.gentoo.org/downloads
@@ -112,7 +71,7 @@ source /etc/profile
 export PS1="(chroot) ${PS1}"
 
 ```
-## Install install
+## Install
 ```
 mkdir /etc/portage/repos.conf
 cp /usr/share/portage/config/repos.conf /etc/portage/repos.conf/gentoo.conf
@@ -124,14 +83,14 @@ emerge --sync
 emerge --ask --verbose --update --deep --newuse @world
 emerge vim htop sudo
 ```
-### Edit fstab:
+## Edit fstab:
 ```
 /dev/nvme0n1p1          /boot           vfat            noauto,noatime  1 2
 /dev/nvme0n1p3          /               ext4            noatime         0 1
 /dev/nvme0n1p2          none            swap            sw,pri=1        0 0
 ```
 
-### Keep it goin
+## Keep it goin
 Set the locale, ensure mdadm has the new fstab info, set timezone
 
 ```
@@ -199,9 +158,10 @@ app-misc/ranger \
 net-misc/ntp \
 x11-misc/dmenu \
 x11-apps/xsetroot \
-x11-vm/dwm \
+x11-wm/dwm \
 x11-base/xorg-server \
 sys-apps/bat \
 sys-process/htop \
 www-client/firefox-bin \
+
 ```
