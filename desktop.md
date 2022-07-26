@@ -18,14 +18,13 @@ System
 # Disks
 
 ## Create partitions
-
+```
 fdisk /dev/nvme0n1
 > delete everything
-
 n -> +256G -> T: 1 (efi)
 n -> +8G -> T: swap
 n -> remainder  -> T: linux fx
-
+```
 ## Create file systems
 
 ```
