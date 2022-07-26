@@ -9,7 +9,7 @@ System
 * ASROCK A300
 ```
 
-```
+
 ## Getting started
 - Boot to Arch Install
 - Read the Gentoo Wiki -> https://wiki.gentoo.org/wiki/Main_Page
