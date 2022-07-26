@@ -51,7 +51,6 @@ mount /dev/nvme0n1p1 /mnt/gentoo/boot/
 cd /mnt/gentoo/
 pacman -Sy ; pacman -S links
 
-
 ```
 # System
 ## Get the tar and chroot
@@ -85,6 +84,16 @@ emerge --sync
 emerge --ask --verbose --update --deep --newuse @world
 emerge vim htop sudo
 ```
+
+## Profile
+Set desktop profile
+
+```
+eselect profile list
+  [2]   default/linux/amd64/17.1/desktop
+eselect profile set 2
+```
+
 ## Edit fstab:
 ```
 /dev/nvme0n1p1          /boot           vfat            noauto,noatime  1 2
