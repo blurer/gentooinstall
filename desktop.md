@@ -172,7 +172,7 @@ genkernel all
 ```
 grub-install /dev/nvme1n1
 grub-mkconfig -o /boot/grub/grub.cfg
-
+```
 ## Final system setup
 
 ```
@@ -191,4 +191,17 @@ visudo -> uncomment wheel to have sudo perms
 
 Boot it up and login as user or root.
 
-sudo emerge x11-terms/st app-editors/vim app-misc/ranger net-misc/ntp x11-misc/dmenu x11-apps/xsetroot x11-vm/dwm x11-base/xorg-server sys-apps/bat sys-process/htop www-client/firefox-bin
+```
+sudo emerge \
+x11-terms/st \
+app-editors/vim \
+app-misc/ranger \
+net-misc/ntp \
+x11-misc/dmenu \
+x11-apps/xsetroot \
+x11-vm/dwm \
+x11-base/xorg-server \
+sys-apps/bat \
+sys-process/htop \
+www-client/firefox-bin \
+```
