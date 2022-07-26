@@ -1,10 +1,13 @@
-Gentoo Install on Desktop
+# Gentoo Install on Desktop
+
+System
+```
 * Ryzen 3, 3200g
 * 32gb DDR4 sodimm/3200mhz
 * 1tb Samsung NVME
 * 2x 1tb Samsung SATA SSD
 * ASROCK A300
-
+```
 
 ```
 ## Getting started
